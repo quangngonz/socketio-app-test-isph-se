@@ -7,7 +7,6 @@ function App() {
   const [stocks, setStocks] = React.useState({});
 
   useEffect(() => {
-
     const socket = io(SOCKET_URL, {
       transports: ['websocket'],
     });
@@ -27,14 +26,16 @@ function App() {
       setStocks(data);
 
       // Example: Parsing and logging stock details
-      const stocks = data
-      Object.entries(stocks).forEach(([key, stock]) => {
-        console.log(`Stock: ${key}`);
-        console.log(`  Full Name: ${stock.full_name}`);
-        console.log(`  Current Price: ${stock.current_price}`);
-        console.log(`  Market Cap: ${stock.market_cap}`);
-        console.log(`  Volume Available: ${stock.volume_available}`);
-      });
+      const stocks = data;
+      console.table(
+        Object.entries(stocks).map(([key, stock]) => ({
+          Stock: key,
+          'Full Name': stock.full_name,
+          'Current Price': stock.current_price,
+          'Market Cap': stock.market_cap,
+          'Volume Available': stock.volume_available,
+        }))
+      );
     });
 
     // Clean up
@@ -47,21 +48,17 @@ function App() {
     <div>
       <h1>Socket.IO Stock Updates</h1>
       <p>Check the console for stock updates.</p>
-      {
-        Object.entries(stocks).map(([key, stock]) => (
-          <div key={key}>
-            <h2>{key}</h2>
-            <p>Full Name: {stock.full_name}</p>
-            <p>Current Price: {stock.current_price}</p>
-            <p>Market Cap: {stock.market_cap}</p>
-            <p>Volume Available: {stock.volume_available}</p>
-          </div>
-        ))
-      }
-))}
-</div>
-)
-  ;
+      {Object.entries(stocks).map(([key, stock]) => (
+        <div key={key}>
+          <h2>{key}</h2>
+          <p>Full Name: {stock.full_name}</p>
+          <p>Current Price: {stock.current_price}</p>
+          <p>Market Cap: {stock.market_cap}</p>
+          <p>Volume Available: {stock.volume_available}</p>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default App;
